@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://dfo85ipfpupg2"]
+
+[node name="Room" type="Node3D"]
+
+[node name="Walls" type="Node3D" parent="."]
+
+[node name="Left" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.95, 2.5, -5)
+use_collision = true
+size = Vector3(0.1, 5, 10)
+
+[node name="Right" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.95, 2.5, -5)
+use_collision = true
+size = Vector3(0.1, 5, 10)
+
+[node name="Back" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -9.95)
+use_collision = true
+size = Vector3(20, 5, 0.1)
+
+[node name="Front" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -0.05)
+transparency = 1.0
+use_collision = true
+size = Vector3(20, 5, 0.1)
+
+[node name="Floor" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -5)
+use_collision = true
+size = Vector3(20, 0.1, 10)
+
+[node name="Ceiling" type="CSGBox3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.95, -5)
+use_collision = true
+size = Vector3(20, 0.1, 10)
