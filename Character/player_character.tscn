@@ -332,9 +332,9 @@ blend_mode = 1
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_tp8l4"]
 graph_offset = Vector2(-92.562, -10.2314)
+nodes/output/position = Vector2(800, 180)
 nodes/BlendSpace1D/node = SubResource("AnimationNodeBlendSpace1D_b6p10")
 nodes/BlendSpace1D/position = Vector2(209.864, 178.116)
-nodes/output/position = Vector2(800, 180)
 node_connections = [&"output", 0, &"BlendSpace1D"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_b6p10"]
@@ -350,9 +350,9 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_wj11p")
 blend_point_1/pos = 1.0
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_qj0cw"]
+nodes/output/position = Vector2(640, 200)
 nodes/BlendSpace1D/node = SubResource("AnimationNodeBlendSpace1D_03ek6")
 nodes/BlendSpace1D/position = Vector2(89.54, 147.62)
-nodes/output/position = Vector2(640, 200)
 node_connections = [&"output", 0, &"BlendSpace1D"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wj11p"]

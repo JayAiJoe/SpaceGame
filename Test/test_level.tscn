@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cut0aigx0q183"]
+[gd_scene load_steps=7 format=3 uid="uid://cut0aigx0q183"]
 
 [ext_resource type="PackedScene" uid="uid://cxkslmvtcsput" path="res://Character/player_character.tscn" id="1_sgx7r"]
 [ext_resource type="PackedScene" uid="uid://dfo85ipfpupg2" path="res://Environment/Rooms/room.tscn" id="2_dmxo2"]
+[ext_resource type="Script" uid="uid://bna3lrajpx6eo" path="res://Environment/Rooms/room_manager.gd" id="3_ckmih"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dmxo2"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -22,12 +23,13 @@ glow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_m3pee")
 
-[node name="DirectionalLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 3.68168, -4.68912)
-shadow_enabled = true
-omni_range = 19.716
-
 [node name="CharacterBody3D" parent="." instance=ExtResource("1_sgx7r")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.339, -2.34208)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.41061735, 1.339, -2.34208)
 
 [node name="Room" parent="." instance=ExtResource("2_dmxo2")]
+
+[node name="Room2" parent="." instance=ExtResource("2_dmxo2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.95353, 0, 0)
+
+[node name="RoomManager" type="Node3D" parent="."]
+script = ExtResource("3_ckmih")
