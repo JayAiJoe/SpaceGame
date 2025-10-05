@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://cut0aigx0q183"]
+[gd_scene load_steps=6 format=3 uid="uid://cut0aigx0q183"]
 
 [ext_resource type="PackedScene" uid="uid://cxkslmvtcsput" path="res://Character/player_character.tscn" id="1_sgx7r"]
-[ext_resource type="PackedScene" uid="uid://dfo85ipfpupg2" path="res://Environment/Rooms/room.tscn" id="2_dmxo2"]
 [ext_resource type="Script" uid="uid://bna3lrajpx6eo" path="res://Environment/Rooms/room_manager.gd" id="3_ckmih"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dmxo2"]
@@ -25,11 +24,6 @@ environment = SubResource("Environment_m3pee")
 
 [node name="CharacterBody3D" parent="." instance=ExtResource("1_sgx7r")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.41061735, 1.339, -2.34208)
-
-[node name="Room" parent="." instance=ExtResource("2_dmxo2")]
-
-[node name="Room2" parent="." instance=ExtResource("2_dmxo2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.95353, 0, 0)
 
 [node name="RoomManager" type="Node3D" parent="."]
 script = ExtResource("3_ckmih")

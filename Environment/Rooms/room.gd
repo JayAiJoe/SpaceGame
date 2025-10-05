@@ -8,13 +8,13 @@ const DEFAULT_HEIGHT := 5.0
 
 var room_size := Vector3.ONE
 
-var room_length := 1.0:
-	set(new_length):
-		if is_node_ready():
-			set_room_size(new_length)
+var room_length := 1.0
+
+var left_room : Room
+var right_room : Room
 
 func _ready() -> void:
-	room_length = 20
+	set_room_size(room_length)
 
 func set_room_size(length:float) -> void:
 	room_size = Vector3(length, DEFAULT_HEIGHT, DEFAULT_WIDTH)
@@ -39,3 +39,15 @@ func set_room_size(length:float) -> void:
 	
 	$RoomLight.position = room_size/2
 	$RoomLight.position.z = 0
+
+func get_left_pos() -> float:
+	return global_position.x
+
+func get_right_pos() -> float:
+	return global_position.x + room_size.x
+
+func get_floor_pos() -> float:
+	return global_position.y
+
+func get_ceiling_pos() -> float:
+	return global_position.y + room_size.y
