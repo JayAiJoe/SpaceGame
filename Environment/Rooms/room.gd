@@ -5,10 +5,11 @@ const WALL_THICKNESS := 0.1
 const DOOR_SIZE := Vector2(2, 3)
 const DEFAULT_WIDTH := 7.0
 const DEFAULT_HEIGHT := 5.0
+const ROOM_LENGTH_GRANULARITY : int = 5
 
 var room_size := Vector3.ONE
 
-var room_length := 1.0
+var room_length : int = 1
 
 var left_room : Room
 var right_room : Room

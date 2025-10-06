@@ -10,7 +10,7 @@ func _ready() -> void:
 	create_floors()
 
 func create_floors() -> void:
-	var max_width := 30.
+	var max_width := 40.
 	var downstairs_room : Room = null
 	for i in range(FLOORS_NUM):
 		var new_floor_start = create_floor(max_width, 3)
@@ -32,6 +32,7 @@ func create_floor(total_length:float, rooms:int) -> Room:
 		var room_length : float
 		if i < rooms-1:
 			room_length = (total_length - current_length)/(rooms - i) * randf_range(0.65, 1.35)
+			room_length = snapped(room_length, Room.ROOM_LENGTH_GRANULARITY)
 			current_length += room_length
 		else:
 			room_length = total_length - current_length
