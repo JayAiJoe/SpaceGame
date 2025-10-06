@@ -14,7 +14,10 @@ var left_room : Room
 var right_room : Room
 
 func _ready() -> void:
+	randomize()
 	set_room_size(room_length)
+	randomize_wall_textures()
+
 
 func set_room_size(length:float) -> void:
 	room_size = Vector3(length, DEFAULT_HEIGHT, DEFAULT_WIDTH)
@@ -51,3 +54,11 @@ func get_floor_pos() -> float:
 
 func get_ceiling_pos() -> float:
 	return global_position.y + room_size.y
+
+func randomize_wall_textures() -> void:
+	var texture_index = randi() % 4 + 1
+	for wall in [$Walls/Right, $Walls/Left, $Walls/Back]:
+		wall.material.albedo_texture = load("res://TestAssets/Textures/wall" + str(texture_index) + "_albedo.png")
+		wall.material.normal_texture = load("res://TestAssets/Textures/wall" + str(texture_index) + "_normal.png")
+		wall.material.roughness_texture = load("res://TestAssets/Textures/wall" + str(texture_index) + "_roughness.png")
+		wall.material.heightmap_texture = load("res://TestAssets/Textures/wall" + str(texture_index) + "_height.png")

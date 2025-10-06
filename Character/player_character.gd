@@ -1,21 +1,55 @@
 extends CharacterBody3D
 
 
-const SPEED = 7.0
+const WALK_SPEED = 4.0
+const SPRINT_SPEED = 6.0
+const SNEAK_SPEED = 1.5
+const ACCELERATION = 0.75
+
 const JUMP_VELOCITY = 4.5
-const LOOK_AHEAD_DISPLACEMENT = 1.0
+const LOOK_AHEAD_DISPLACEMENT = 0.0
 
 @onready var anim_tree = $SpriteAnchor/AnimationTree
 @onready var cam_rig = $CameraRig
+@onready var playback : AnimationNodeStateMachinePlayback = anim_tree.get("parameters/playback")
 
+#movement
 var prev_char_dir := Vector2(1, 0) # XZ-direction
+var is_holding_spint := false
+var is_holding_sneak := false
+var movement_locked := false
+
+#camera
 var target_cam_pos : Vector3
+
+func _input(event):
+	if event.is_action_pressed("interact"):
+		if playback.get_current_node() == "Idle":
+			playback.travel("Interact")
+			anim_tree.set("parameters/Interact/BlendSpace1D/blend_position", prev_char_dir.x)
+
+
+func lock_movement() -> void:
+	movement_locked = true
+	velocity = Vector3.ZERO
+
+func unlock_movement() -> void:
+	movement_locked = false
 
 
 
 func _physics_process(delta):
+	if movement_locked:
+		return
+		
+	is_holding_spint = Input.is_action_pressed("sprint")
+	is_holding_sneak = Input.is_action_pressed("sneak")
 	
-	
+	var movement_type := "walk"
+	if is_holding_spint:
+		movement_type = "sprint"
+	if is_holding_sneak:
+		movement_type = "sneak"
 	
 	# Add the gravity.
 	if not is_on_floor():
@@ -30,20 +64,41 @@ func _physics_process(delta):
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-		prev_char_dir = Vector2(sign(direction.x), sign(direction.z))
-		anim_tree.get("parameters/playback").travel("Walk")
-		anim_tree.set("parameters/Walk/BlendSpace1D/blend_position", prev_char_dir.x)
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
 		
-		anim_tree.get("parameters/playback").travel("Idle")
-		anim_tree.set("parameters/Idle/BlendSpace1D/blend_position", prev_char_dir.x)
+		prev_char_dir = Vector2(sign(direction.x), sign(direction.z))
+		match(movement_type):
+			"walk":
+				velocity.x = move_toward(velocity.x, WALK_SPEED * direction.x, ACCELERATION)
+				velocity.z = move_toward(velocity.z, WALK_SPEED * direction.z, ACCELERATION)
+				playback.travel("Walk")
+				anim_tree.set("parameters/Walk/BlendSpace1D/blend_position", prev_char_dir.x)
+			"sprint":
+				velocity.x = move_toward(velocity.x, SPRINT_SPEED * direction.x, ACCELERATION)
+				velocity.z = move_toward(velocity.z, SPRINT_SPEED * direction.z, ACCELERATION)
+				playback.travel("Sprint")
+				anim_tree.set("parameters/Sprint/BlendSpace1D/blend_position", prev_char_dir.x)
+			"sneak":
+				velocity.x = move_toward(velocity.x, SNEAK_SPEED * direction.x, ACCELERATION)
+				velocity.z = move_toward(velocity.z, SNEAK_SPEED * direction.z, ACCELERATION)
+				playback.travel("Sneak")
+				anim_tree.set("parameters/Sneak/BlendSpace1D/blend_position", prev_char_dir.x)
+			
+		
+	else:
+		velocity.x = move_toward(velocity.x, 0, ACCELERATION)
+		velocity.z = move_toward(velocity.z, 0, ACCELERATION)
+		
+		if is_holding_sneak:
+			playback.travel("SneakIdle")
+			anim_tree.set("parameters/SneakIdle/BlendSpace1D/blend_position", prev_char_dir.x)
+		else:
+			playback.travel("Idle")
+			anim_tree.set("parameters/Idle/BlendSpace1D/blend_position", prev_char_dir.x)
 		
 
 	move_and_slide()
+	
+	
 	
 	# Camera
 	var look_ahead = prev_char_dir.normalized() * LOOK_AHEAD_DISPLACEMENT
