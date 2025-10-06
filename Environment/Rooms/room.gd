@@ -1,3 +1,4 @@
+@tool 
 extends Node3D
 class_name Room
 
@@ -9,7 +10,11 @@ const ROOM_LENGTH_GRANULARITY : int = 5
 
 var room_size := Vector3.ONE
 
-var room_length : int = 1
+@export_range(0, 100, ROOM_LENGTH_GRANULARITY) var room_length : int = 1 :
+	set(length):
+		room_length = length
+		if Engine.is_editor_hint():
+			set_room_size(length)
 
 var left_room : Room
 var right_room : Room
@@ -51,4 +56,10 @@ func get_floor_pos() -> float:
 	return global_position.y
 
 func get_ceiling_pos() -> float:
+	return global_position.y + room_size.y
+
+func get_back_pos() -> float:
+	return global_position.y
+
+func get_front_pos() -> float:
 	return global_position.y + room_size.y

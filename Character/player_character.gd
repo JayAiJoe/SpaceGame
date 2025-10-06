@@ -51,6 +51,6 @@ func _physics_process(delta):
 	
 	
 	if cam_rig:
-		cam_rig.global_position.x = target_cam_pos.x 
-		cam_rig.global_position.y = target_cam_pos.y
-		cam_rig.global_position.z = min(-3, target_cam_pos.z)
+		cam_rig.global_position.x = 2.5 + floor(global_position.x/5)*5 #target_cam_pos.x 
+		cam_rig.global_position.y = snapped(global_position.y, 5)+1 #target_cam_pos.y
+		cam_rig.global_position.z = 4 #min(0, target_cam_pos.z)
