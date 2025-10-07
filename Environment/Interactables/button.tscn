@@ -1,0 +1,47 @@
+[gd_scene load_steps=11 format=3 uid="uid://doq14l8hxhlor"]
+
+[ext_resource type="Script" uid="uid://csojl58p1dfoy" path="res://Environment/Interactables/button.gd" id="1_mfopg"]
+[ext_resource type="Texture2D" uid="uid://bpgicepak6rmd" path="res://TestAssets/Textures/wall4_albedo.png" id="1_vd4gn"]
+[ext_resource type="Texture2D" uid="uid://dck0n62jew0rc" path="res://TestAssets/Textures/wall4_height.png" id="2_mfopg"]
+[ext_resource type="Texture2D" uid="uid://b1ux4dotfsuyr" path="res://TestAssets/Textures/wall4_normal.png" id="3_odix3"]
+[ext_resource type="Texture2D" uid="uid://by7ddxkbf211h" path="res://TestAssets/Textures/wall4_roughness.png" id="4_u1hmf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_asxr3"]
+size = Vector3(1, 1.5, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4wtam"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sujks"]
+albedo_texture = ExtResource("1_vd4gn")
+roughness_texture = ExtResource("4_u1hmf")
+normal_enabled = true
+normal_texture = ExtResource("3_odix3")
+heightmap_enabled = true
+heightmap_texture = ExtResource("2_mfopg")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_asxr3"]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vd4gn"]
+albedo_color = Color(0, 1, 0, 1)
+
+[node name="Button" type="StaticBody3D" groups=["Interactables"]]
+collision_layer = 5
+collision_mask = 0
+script = ExtResource("1_mfopg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("BoxShape3D_asxr3")
+
+[node name="Box" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_4wtam")
+surface_material_override/0 = SubResource("StandardMaterial3D_sujks")
+
+[node name="ButtonMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CylinderMesh_asxr3")
+surface_material_override/0 = SubResource("StandardMaterial3D_vd4gn")

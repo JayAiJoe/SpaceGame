@@ -29,6 +29,8 @@ func set_room_info(length : int) -> void:
 	set_room_size(length)
 	adjust_camera_to_room(length)
 	
+	$Items/Button.position = Vector3(room_size.x/2.0, 0, -room_size.z/2.0 + 0.5)
+	
 
 
 func set_room_size(length:float) -> void:

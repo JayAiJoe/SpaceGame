@@ -1,4 +1,4 @@
-[gd_scene load_steps=105 format=3 uid="uid://cxkslmvtcsput"]
+[gd_scene load_steps=106 format=3 uid="uid://cxkslmvtcsput"]
 
 [ext_resource type="Script" uid="uid://dk1jcem3x8hty" path="res://Character/player_character.gd" id="1_atbs6"]
 [ext_resource type="Texture2D" uid="uid://b14yfdp44estb" path="res://TestAssets/SpriteTest/Dir Change.png" id="2_b6p10"]
@@ -1154,6 +1154,10 @@ graph_offset = Vector2(-169, 43.561096)
 [sub_resource type="SphereShape3D" id="SphereShape3D_14b3u"]
 radius = 0.13346379
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_14b3u"]
+height = 3.0
+radius = 1.0
+
 [node name="Player" type="CharacterBody3D" groups=["Players"]]
 script = ExtResource("1_atbs6")
 
@@ -1204,8 +1208,20 @@ collision_mask = 0
 [node name="CollisionShape" type="CollisionShape3D" parent="CenterofMass"]
 shape = SubResource("SphereShape3D_14b3u")
 
+[node name="InteractArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("CylinderShape3D_14b3u")
+
 [node name="RecoveryTimer" type="Timer" parent="."]
 wait_time = 1.25
 one_shot = true
 
+[connection signal="area_entered" from="InteractArea" to="." method="_on_interact_area_area_entered"]
+[connection signal="area_exited" from="InteractArea" to="." method="_on_interact_area_area_exited"]
+[connection signal="body_entered" from="InteractArea" to="." method="_on_interact_area_body_entered"]
+[connection signal="body_exited" from="InteractArea" to="." method="_on_interact_area_body_exited"]
 [connection signal="timeout" from="RecoveryTimer" to="." method="_on_recovery_timer_timeout"]
