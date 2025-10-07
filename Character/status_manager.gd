@@ -12,7 +12,6 @@ func get_status_value(status_name : String) -> float:
 func add_status(status_name : String, value : float) -> void:
 	if statuses.keys().has(status_name):
 		statuses[status_name] = max(0, statuses[status_name] + value)
-		print("changed " + str(statuses[status_name]))
 	else:
 		statuses[status_name] = value
 	var non_health_total = 0.0

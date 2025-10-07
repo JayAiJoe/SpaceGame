@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dfo85ipfpupg2"]
+[gd_scene load_steps=10 format=3 uid="uid://dfo85ipfpupg2"]
 
 [ext_resource type="Script" uid="uid://dugo6md3jjjq0" path="res://Environment/Rooms/room.gd" id="1_0r2tv"]
 [ext_resource type="Texture2D" uid="uid://bvu26y20gcxhj" path="res://TestAssets/Textures/wall3_albedo.png" id="2_cjcvy"]
 [ext_resource type="PackedScene" uid="uid://doq14l8hxhlor" path="res://Environment/Interactables/button.tscn" id="3_w06pt"]
+[ext_resource type="PackedScene" uid="uid://ud3bgrr7j3n8" path="res://Items/Item.tscn" id="4_j5hem"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0r2tv"]
 resource_local_to_scene = true
@@ -103,5 +104,8 @@ shape = SubResource("BoxShape3D_0r2tv")
 [node name="Items" type="Node3D" parent="."]
 
 [node name="Button" parent="Items" instance=ExtResource("3_w06pt")]
+
+[node name="Gun" parent="Items" instance=ExtResource("4_j5hem")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.212861, 0, 0)
 
 [connection signal="area_entered" from="RoomArea" to="." method="_on_room_area_area_entered"]

@@ -34,7 +34,7 @@ var target_cam_pos : Vector3
 var interactables_in_range := []
 
 #inventory
-var inventory : Dictionary = {}
+var inventory := []
 
 #status
 var status_manager : StatusManager = StatusManager.new()
@@ -47,7 +47,7 @@ func _input(event):
 		if playback.get_current_node() == "Idle" and interactables_in_range.size() > 0:
 			playback.travel("Interact")
 			anim_tree.set("parameters/Interact/BlendSpace1D/blend_position", prev_char_dir.x)
-			interactables_in_range[0].interact()
+			interactables_in_range[0].interact(self)
 
 
 func lock_movement() -> void:

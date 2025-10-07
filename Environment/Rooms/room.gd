@@ -30,6 +30,7 @@ func set_room_info(length : int) -> void:
 	adjust_camera_to_room(length)
 	
 	$Items/Button.position = Vector3(room_size.x/2.0, 0, -room_size.z/2.0 + 0.5)
+	$Items/Gun.position = Vector3(room_size.x/2.0, 0, 0)
 	
 
 

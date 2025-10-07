@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://ud3bgrr7j3n8"]
+
+[ext_resource type="Texture2D" uid="uid://dhu2okbs75c5o" path="res://TestAssets/Items/pistol.png" id="1_pwpfw"]
+[ext_resource type="Script" uid="uid://bsqphh7x1e481" path="res://Items/item.gd" id="1_s5qnr"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pwpfw"]
+height = 1.0
+
+[node name="Item" type="Area3D" groups=["Interactables"]]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_s5qnr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_pwpfw")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.185132, 0)
+pixel_size = 0.001
+texture = ExtResource("1_pwpfw")
