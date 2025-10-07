@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://d3lk6t3vgetor"]
+
+[ext_resource type="PackedScene" uid="uid://dfo85ipfpupg2" path="res://Environment/Rooms/room.tscn" id="1_h1sfj"]
+[ext_resource type="Script" uid="uid://c6istrimstjij" path="res://Environment/Rooms/elevator_shaft.gd" id="2_wyr4s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wyr4s"]
+resource_local_to_scene = true
+normal_enabled = true
+heightmap_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_deoso"]
+resource_local_to_scene = true
+normal_enabled = true
+heightmap_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f2ndd"]
+resource_local_to_scene = true
+normal_enabled = true
+heightmap_enabled = true
+
+[node name="ElevatorShaft" instance=ExtResource("1_h1sfj")]
+script = ExtResource("2_wyr4s")
+
+[node name="Left" parent="Walls" index="0"]
+material = SubResource("StandardMaterial3D_wyr4s")
+
+[node name="Right" parent="Walls" index="1"]
+material = SubResource("StandardMaterial3D_deoso")
+
+[node name="Back" parent="Walls" index="2"]
+material = SubResource("StandardMaterial3D_f2ndd")

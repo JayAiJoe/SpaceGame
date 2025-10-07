@@ -5,23 +5,24 @@ const WALL_THICKNESS := 0.1
 const DOOR_SIZE := Vector2(2, 3)
 const DEFAULT_WIDTH := 7.0
 const DEFAULT_HEIGHT := 5.0
-const ROOM_LENGTH_GRANULARITY : int = 5
+const ROOM_SIZE_GRANULARITY : int = 5
 
 var room_size := Vector3.ONE
 
-var room_length : int = 1
+var room_length : int = 5
+var room_height : int = 5
 
 var left_room : Room
 var right_room : Room
 
 func _ready() -> void:
 	randomize()
-	set_room_size(room_length)
+	set_room_size(room_length, room_height)
 	randomize_wall_textures()
 
 
-func set_room_size(length:float) -> void:
-	room_size = Vector3(length, DEFAULT_HEIGHT, DEFAULT_WIDTH)
+func set_room_size(length:float, height:=DEFAULT_HEIGHT) -> void:
+	room_size = Vector3(length, height, DEFAULT_WIDTH)
 	
 	$Walls/Floor.size = Vector3(room_size.x, WALL_THICKNESS, room_size.z)
 	$Walls/Floor.position = Vector3(room_size.x/2, -WALL_THICKNESS/2, 0)

@@ -7,13 +7,14 @@ var first_rooms := [] # array of doubly linked lists
 const FLOORS_NUM := 5
 
 func _ready() -> void:
-	create_floors()
+	create_floors(FLOORS_NUM)
+	create_elevator(FLOORS_NUM)
 
-func create_floors() -> void:
+func create_floors(floors:int) -> void:
 	var max_width := 40.
 	var downstairs_room : Room = null
-	for i in range(FLOORS_NUM):
-		var new_floor_start = create_floor(max_width, 3)
+	for i in range(floors):
+		var new_floor_start = create_floor(max_width)
 		first_rooms.append(new_floor_start)
 		if downstairs_room:
 			var room = new_floor_start
@@ -24,7 +25,7 @@ func create_floors() -> void:
 				
 		downstairs_room = first_rooms[i]
 
-func create_floor(total_length:float, rooms:int) -> Room:
+func create_floor(total_length:float, rooms:int=3) -> Room:
 	var first_room : Room
 	var left_room : Room = null
 	var current_length := 0.0
@@ -32,7 +33,7 @@ func create_floor(total_length:float, rooms:int) -> Room:
 		var room_length : float
 		if i < rooms-1:
 			room_length = (total_length - current_length)/(rooms - i) * randf_range(0.65, 1.35)
-			room_length = snapped(room_length, Room.ROOM_LENGTH_GRANULARITY)
+			room_length = snapped(room_length, Room.ROOM_SIZE_GRANULARITY)
 			current_length += room_length
 		else:
 			room_length = total_length - current_length
@@ -53,3 +54,9 @@ func create_floor(total_length:float, rooms:int) -> Room:
 		left_room = new_room
 	
 	return first_room
+
+func create_elevator(floors:int) -> void:
+	var shaft : Room = ROOM.instantiate()
+	shaft.room_height = int(Room.DEFAULT_HEIGHT) * floors
+	add_child(shaft)
+	shaft.global_position.x = -shaft.room_size.x
