@@ -40,8 +40,9 @@ func create_floor(total_length:float, rooms:int=3) -> Room:
 			room_length = total_length - current_length
 			
 		var new_room = ROOM.instantiate()
-		new_room.room_length = room_length
 		add_child(new_room)
+		new_room.set_room_info(room_length)
+		
 		
 		if left_room:
 			left_room.right_room = new_room

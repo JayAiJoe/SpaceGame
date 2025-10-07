@@ -15,6 +15,14 @@ run/main_scene="uid://cut0aigx0q183"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Events="*res://Globals/events.gd"
+
+[global_group]
+
+Players=""
+
 [input]
 
 up={
