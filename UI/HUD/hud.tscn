@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://dg3oc6c73a7fs"]
+
+[ext_resource type="Script" uid="uid://bt2yqa65jjt87" path="res://UI/HUD/status_bar.gd" id="1_ia7gp"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="StatusBar" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 2
+script = ExtResource("1_ia7gp")
+
+[node name="Health" type="ColorRect" parent="StatusBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+color = Color(0, 1, 0, 1)
+
+[node name="Stamina" type="ColorRect" parent="StatusBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+color = Color(1, 1, 1, 0)
+
+[node name="Damage" type="ColorRect" parent="StatusBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+color = Color(1, 0, 0, 1)
