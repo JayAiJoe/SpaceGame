@@ -15,7 +15,7 @@ var room_height : int = 5
 var left_room : Room
 var right_room : Room
 
-@onready var camera = $RoomCameraAnchor/Camera3D
+@onready var camera = $RoomCameraAnchor/CameraMarker
 @onready var room_area: CollisionShape3D = $RoomArea/CollisionShape3D
 
 func _ready() -> void:
@@ -111,7 +111,7 @@ func randomize_wall_textures() -> void:
 
 func _on_player_entered_room(player, room) -> void:
 	if room == self:
-		camera.current = true
+		GameCamera.teleport_to($RoomCameraAnchor/CameraMarker.global_transform)
 		$Walls/Front.visible = false
 	else:
 		$Walls/Front.visible = true

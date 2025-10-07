@@ -11,14 +11,16 @@ const STAMINA_RECOVERY = -8.0
 const RECOVERY_DELAY = 1.25
 
 const JUMP_VELOCITY = 4.5
-const LOOK_AHEAD_DISPLACEMENT = 0.0
+const LOOK_AHEAD_DISPLACEMENT = 1.8
 
 @onready var anim_tree = $SpriteAnchor/AnimationTree
 @onready var cam_rig = $CameraRig
+@onready var camera_marker = $CameraRig/CameraAnchor/CameraMarker
 @onready var playback : AnimationNodeStateMachinePlayback = anim_tree.get("parameters/playback")
 
 #movement
 var prev_char_dir := Vector2(1, 0) # XZ-direction
+var look_direction := 1 #X-direction
 var is_holding_spint := false
 var is_holding_sneak := false
 var movement_locked := false
@@ -29,6 +31,8 @@ var recovering_stamina := false
 
 #camera
 var target_cam_pos : Vector3
+var room_camera_transform : Transform3D
+var is_viewing_hud := false
 
 #interact
 var interactables_in_range := []
@@ -46,8 +50,19 @@ func _input(event):
 	if event.is_action_pressed("interact"):
 		if playback.get_current_node() == "Idle" and interactables_in_range.size() > 0:
 			playback.travel("Interact")
-			anim_tree.set("parameters/Interact/BlendSpace1D/blend_position", prev_char_dir.x)
+			anim_tree.set("parameters/Interact/BlendSpace1D/blend_position", look_direction)
 			interactables_in_range[0].interact(self)
+	if event.is_action_pressed("tab"):
+		if !is_viewing_hud:
+			room_camera_transform = GameCamera.global_transform
+			GameCamera.transition_to(camera_marker.global_transform, 0.3, Tween.EASE_OUT, Tween.TRANS_CIRC)
+			lock_movement()
+			is_viewing_hud = true
+		else:
+			GameCamera.transition_to(room_camera_transform, 0.3, Tween.EASE_OUT, Tween.TRANS_CIRC)
+			unlock_movement()
+			is_viewing_hud = false
+			
 
 
 func lock_movement() -> void:
@@ -80,7 +95,9 @@ func _physics_process(delta):
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
+	if sign(direction.x) != 0:
+			look_direction = sign(direction.x)
+	if direction and !movement_locked:
 		
 		movement_type = "walk"
 		if is_holding_spint and status_manager.get_status_value("health") > 0:
@@ -90,25 +107,26 @@ func _physics_process(delta):
 		
 		prev_char_dir = Vector2(sign(direction.x), sign(direction.z))
 		
-		if !movement_locked:
-			match(movement_type):
-				"walk":
-					velocity.x = move_toward(velocity.x, WALK_SPEED * direction.x, ACCELERATION * delta)
-					velocity.z = move_toward(velocity.z, WALK_SPEED * direction.z, ACCELERATION * delta)
-					playback.travel("Walk")
-					anim_tree.set("parameters/Walk/BlendSpace1D/blend_position", prev_char_dir.x)
-				"sprint":
-					recovering_stamina = false
-					status_manager.add_status("consumed_stamina", STAMINA_CONSUMPTION * delta)
-					velocity.x = move_toward(velocity.x, SPRINT_SPEED * direction.x, ACCELERATION * delta)
-					velocity.z = move_toward(velocity.z, SPRINT_SPEED * direction.z, ACCELERATION * delta)
-					playback.travel("Sprint")
-					anim_tree.set("parameters/Sprint/BlendSpace1D/blend_position", prev_char_dir.x)
-				"sneak":
-					velocity.x = move_toward(velocity.x, SNEAK_SPEED * direction.x, ACCELERATION * delta)
-					velocity.z = move_toward(velocity.z, SNEAK_SPEED * direction.z, ACCELERATION * delta)
-					playback.travel("Sneak")
-					anim_tree.set("parameters/Sneak/BlendSpace1D/blend_position", prev_char_dir.x)
+			
+		
+		match(movement_type):
+			"walk":
+				velocity.x = move_toward(velocity.x, WALK_SPEED * direction.x, ACCELERATION * delta)
+				velocity.z = move_toward(velocity.z, WALK_SPEED * direction.z, ACCELERATION * delta)
+				playback.travel("Walk")
+				anim_tree.set("parameters/Walk/BlendSpace1D/blend_position", look_direction)
+			"sprint":
+				recovering_stamina = false
+				status_manager.add_status("consumed_stamina", STAMINA_CONSUMPTION * delta)
+				velocity.x = move_toward(velocity.x, SPRINT_SPEED * direction.x, ACCELERATION * delta)
+				velocity.z = move_toward(velocity.z, SPRINT_SPEED * direction.z, ACCELERATION * delta)
+				playback.travel("Sprint")
+				anim_tree.set("parameters/Sprint/BlendSpace1D/blend_position", look_direction)
+			"sneak":
+				velocity.x = move_toward(velocity.x, SNEAK_SPEED * direction.x, ACCELERATION * delta)
+				velocity.z = move_toward(velocity.z, SNEAK_SPEED * direction.z, ACCELERATION * delta)
+				playback.travel("Sneak")
+				anim_tree.set("parameters/Sneak/BlendSpace1D/blend_position", look_direction)
 			
 	else:
 		velocity.x = move_toward(velocity.x, 0, ACCELERATION * delta)
@@ -116,10 +134,10 @@ func _physics_process(delta):
 		
 		if is_holding_sneak:
 			playback.travel("SneakIdle")
-			anim_tree.set("parameters/SneakIdle/BlendSpace1D/blend_position", prev_char_dir.x)
+			anim_tree.set("parameters/SneakIdle/BlendSpace1D/blend_position", look_direction)
 		else:
 			playback.travel("Idle")
-			anim_tree.set("parameters/Idle/BlendSpace1D/blend_position", prev_char_dir.x)
+			anim_tree.set("parameters/Idle/BlendSpace1D/blend_position", look_direction)
 	
 	#stamina recovery
 	if recovering_stamina:
@@ -130,13 +148,8 @@ func _physics_process(delta):
 		
 	move_and_slide()
 	# Camera
-	var look_ahead = prev_char_dir.normalized() * LOOK_AHEAD_DISPLACEMENT
-	target_cam_pos = lerp(target_cam_pos, global_position + Vector3(look_ahead.x, 0, look_ahead.y), 0.1)
-	
-	if cam_rig:
-		cam_rig.global_position.x = target_cam_pos.x 
-		cam_rig.global_position.y = target_cam_pos.y
-		cam_rig.global_position.z = min(-3, target_cam_pos.z)
+	#var look_ahead = prev_char_dir.normalized() * LOOK_AHEAD_DISPLACEMENT
+	cam_rig.global_position = global_position + Vector3(look_direction * LOOK_AHEAD_DISPLACEMENT, 0, 0) 
 
 
 func _on_recovery_timer_timeout():
