@@ -30,6 +30,9 @@ var recovering_stamina := false
 #camera
 var target_cam_pos : Vector3
 
+#interact
+var interactables_in_range := []
+
 #inventory
 var inventory : Dictionary = {}
 
@@ -41,9 +44,10 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed("interact"):
-		if playback.get_current_node() == "Idle":
+		if playback.get_current_node() == "Idle" and interactables_in_range.size() > 0:
 			playback.travel("Interact")
 			anim_tree.set("parameters/Interact/BlendSpace1D/blend_position", prev_char_dir.x)
+			interactables_in_range[0].interact()
 
 
 func lock_movement() -> void:
@@ -58,8 +62,6 @@ func _process(_delta):
 
 
 func _physics_process(delta):
-	if movement_locked:
-		return
 		
 	is_holding_spint = Input.is_action_pressed("sprint")
 	is_holding_sneak = Input.is_action_pressed("sneak")
@@ -87,26 +89,27 @@ func _physics_process(delta):
 			movement_type = "sneak"
 		
 		prev_char_dir = Vector2(sign(direction.x), sign(direction.z))
-		match(movement_type):
-			"walk":
-				velocity.x = move_toward(velocity.x, WALK_SPEED * direction.x, ACCELERATION * delta)
-				velocity.z = move_toward(velocity.z, WALK_SPEED * direction.z, ACCELERATION * delta)
-				playback.travel("Walk")
-				anim_tree.set("parameters/Walk/BlendSpace1D/blend_position", prev_char_dir.x)
-			"sprint":
-				recovering_stamina = false
-				status_manager.add_status("consumed_stamina", STAMINA_CONSUMPTION * delta)
-				velocity.x = move_toward(velocity.x, SPRINT_SPEED * direction.x, ACCELERATION * delta)
-				velocity.z = move_toward(velocity.z, SPRINT_SPEED * direction.z, ACCELERATION * delta)
-				playback.travel("Sprint")
-				anim_tree.set("parameters/Sprint/BlendSpace1D/blend_position", prev_char_dir.x)
-			"sneak":
-				velocity.x = move_toward(velocity.x, SNEAK_SPEED * direction.x, ACCELERATION * delta)
-				velocity.z = move_toward(velocity.z, SNEAK_SPEED * direction.z, ACCELERATION * delta)
-				playback.travel("Sneak")
-				anim_tree.set("parameters/Sneak/BlendSpace1D/blend_position", prev_char_dir.x)
-			
 		
+		if !movement_locked:
+			match(movement_type):
+				"walk":
+					velocity.x = move_toward(velocity.x, WALK_SPEED * direction.x, ACCELERATION * delta)
+					velocity.z = move_toward(velocity.z, WALK_SPEED * direction.z, ACCELERATION * delta)
+					playback.travel("Walk")
+					anim_tree.set("parameters/Walk/BlendSpace1D/blend_position", prev_char_dir.x)
+				"sprint":
+					recovering_stamina = false
+					status_manager.add_status("consumed_stamina", STAMINA_CONSUMPTION * delta)
+					velocity.x = move_toward(velocity.x, SPRINT_SPEED * direction.x, ACCELERATION * delta)
+					velocity.z = move_toward(velocity.z, SPRINT_SPEED * direction.z, ACCELERATION * delta)
+					playback.travel("Sprint")
+					anim_tree.set("parameters/Sprint/BlendSpace1D/blend_position", prev_char_dir.x)
+				"sneak":
+					velocity.x = move_toward(velocity.x, SNEAK_SPEED * direction.x, ACCELERATION * delta)
+					velocity.z = move_toward(velocity.z, SNEAK_SPEED * direction.z, ACCELERATION * delta)
+					playback.travel("Sneak")
+					anim_tree.set("parameters/Sneak/BlendSpace1D/blend_position", prev_char_dir.x)
+			
 	else:
 		velocity.x = move_toward(velocity.x, 0, ACCELERATION * delta)
 		velocity.z = move_toward(velocity.z, 0, ACCELERATION * delta)
@@ -138,3 +141,23 @@ func _physics_process(delta):
 
 func _on_recovery_timer_timeout():
 	recovering_stamina = true
+
+
+func _on_interact_area_body_entered(body):
+	if body.is_in_group("Interactables"):
+		interactables_in_range.append(body)
+
+
+func _on_interact_area_body_exited(body):
+	if body in interactables_in_range:
+		interactables_in_range.erase(body)
+
+
+func _on_interact_area_area_entered(area):
+	if area.is_in_group("Interactables"):
+		interactables_in_range.append(area)
+
+
+func _on_interact_area_area_exited(area):
+	if area in interactables_in_range:
+		interactables_in_range.erase(area)
