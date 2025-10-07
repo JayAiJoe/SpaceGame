@@ -91,7 +91,7 @@ size = Vector3(5, 0.1, 10)
 
 [node name="RoomCameraAnchor" type="Node3D" parent="."]
 
-[node name="Camera3D" type="Camera3D" parent="RoomCameraAnchor"]
+[node name="CameraMarker" type="Marker3D" parent="RoomCameraAnchor"]
 transform = Transform3D(1, 0, 0, 0, 0.98570347, 0.16848938, 0, -0.16848938, 0.98570347, 2.3952022, 1.5256109, 6.1946163)
 
 [node name="RoomArea" type="Area3D" parent="."]
