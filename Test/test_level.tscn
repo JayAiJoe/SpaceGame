@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://cut0aigx0q183"]
+[gd_scene load_steps=12 format=3 uid="uid://cut0aigx0q183"]
 
 [ext_resource type="Script" uid="uid://capat05ygmoii" path="res://Test/test_level.gd" id="1_m3pee"]
 [ext_resource type="PackedScene" uid="uid://cxkslmvtcsput" path="res://Character/player_character.tscn" id="1_sgx7r"]
 [ext_resource type="Script" uid="uid://bna3lrajpx6eo" path="res://Environment/Rooms/room_manager.gd" id="3_ckmih"]
 [ext_resource type="PackedScene" uid="uid://dg3oc6c73a7fs" path="res://UI/HUD/hud.tscn" id="3_m3pee"]
+[ext_resource type="Shader" uid="uid://dytnlmlwgatsa" path="res://UI/HUD/ui_viewport3d.gdshader" id="5_o8dmv"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dmxo2"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -18,6 +19,27 @@ background_energy_multiplier = 0.0
 sky = SubResource("Sky_ckmih")
 tonemap_mode = 2
 glow_enabled = true
+glow_strength = 1.26
+glow_blend_mode = 0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_o8dmv"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xiefr"]
+resource_local_to_scene = true
+render_priority = 2
+shader = ExtResource("5_o8dmv")
+shader_parameter/ui_tex = SubResource("ViewportTexture_o8dmv")
+shader_parameter/glow_tint = Color(1, 1, 1, 1)
+shader_parameter/glow_strength = 1.200000057
+shader_parameter/scanline_strength = 0.3
+shader_parameter/scanline_speed = -0.006999525332499701
+shader_parameter/flicker_speed = 0.50000002375
+shader_parameter/flicker_intensity = 0.050000002375
+shader_parameter/border_fade_size = 0.0970000046075
+
+[sub_resource type="QuadMesh" id="QuadMesh_m3pee"]
+size = Vector2(3, 2)
 
 [node name="TestLevel" type="Node3D"]
 script = ExtResource("1_m3pee")
@@ -25,12 +47,23 @@ script = ExtResource("1_m3pee")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_m3pee")
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("1_sgx7r")]
+[node name="Player" parent="." instance=ExtResource("1_sgx7r")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.41061735, 1.339, -2.34208)
 
 [node name="RoomManager" type="Node3D" parent="."]
 script = ExtResource("3_ckmih")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(1080, 900)
+render_target_update_mode = 4
 
-[node name="HUD" parent="CanvasLayer" instance=ExtResource("3_m3pee")]
+[node name="HUD" parent="SubViewport" instance=ExtResource("3_m3pee")]
+unique_name_in_owner = true
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="HUDMesh" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_xiefr")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_m3pee")
