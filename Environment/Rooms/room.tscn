@@ -105,7 +105,13 @@ shape = SubResource("BoxShape3D_0r2tv")
 
 [node name="Button" parent="Items" instance=ExtResource("3_w06pt")]
 
-[node name="Gun" parent="Items" instance=ExtResource("4_j5hem")]
+[node name="Item1" parent="Items" instance=ExtResource("4_j5hem")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.212861, 0, 0)
+
+[node name="Item2" parent="Items" instance=ExtResource("4_j5hem")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.212861, 0, 0)
+
+[node name="Item3" parent="Items" instance=ExtResource("4_j5hem")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.212861, 0, 0)
 
 [connection signal="area_entered" from="RoomArea" to="." method="_on_room_area_area_entered"]

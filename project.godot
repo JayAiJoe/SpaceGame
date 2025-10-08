@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Events="*res://Globals/events.gd"
 GameCamera="*res://Globals/game_camera.gd"
+Items="*res://Globals/items.gd"
 
 [global_group]
 

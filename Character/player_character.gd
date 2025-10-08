@@ -11,7 +11,7 @@ const STAMINA_RECOVERY = -8.0
 const RECOVERY_DELAY = 1.25
 
 const JUMP_VELOCITY = 4.5
-const LOOK_AHEAD_DISPLACEMENT = 1.8
+const LOOK_AHEAD_DISPLACEMENT = 1.85
 
 @onready var anim_tree = $SpriteAnchor/AnimationTree
 @onready var cam_rig = $CameraRig
@@ -38,7 +38,7 @@ var is_viewing_hud := false
 var interactables_in_range := []
 
 #inventory
-var inventory := []
+var inventory_manager := InventoryManager.new()
 
 #status
 var status_manager : StatusManager = StatusManager.new()
@@ -58,10 +58,12 @@ func _input(event):
 			GameCamera.transition_to(camera_marker.global_transform, 0.3, Tween.EASE_OUT, Tween.TRANS_CIRC)
 			lock_movement()
 			is_viewing_hud = true
+			Events.player_viewed_hud.emit()
 		else:
 			GameCamera.transition_to(room_camera_transform, 0.3, Tween.EASE_OUT, Tween.TRANS_CIRC)
 			unlock_movement()
 			is_viewing_hud = false
+			Events.player_exited_hud.emit()
 			
 
 
@@ -95,8 +97,6 @@ func _physics_process(delta):
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if sign(direction.x) != 0:
-			look_direction = sign(direction.x)
 	if direction and !movement_locked:
 		
 		movement_type = "walk"
@@ -106,6 +106,8 @@ func _physics_process(delta):
 			movement_type = "sneak"
 		
 		prev_char_dir = Vector2(sign(direction.x), sign(direction.z))
+		if sign(direction.x) != 0:
+			look_direction = sign(direction.x)
 		
 			
 		
@@ -174,3 +176,12 @@ func _on_interact_area_area_entered(area):
 func _on_interact_area_area_exited(area):
 	if area in interactables_in_range:
 		interactables_in_range.erase(area)
+
+func get_target_hud_position() -> Vector3:
+	return $CameraRig/CameraAnchor.global_position
+
+func add_to_inventory(item : Dictionary) -> bool:
+	if inventory_manager.add_to_inventory(item):
+		Events.player_inventory_updated.emit(self, inventory_manager.get_inventory())
+		return true
+	return false

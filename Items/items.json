@@ -1,0 +1,28 @@
+{
+	"pistol" : {
+		"name" : "Pistol",
+		"description" : "trusty sidearm weapon",
+		"max_stacks" : 1,
+		"sprite" : "res://TestAssets/Items/pistol.png",
+		"magazine" : 8,
+		"ammo" : 20
+	},
+	"passkey" : {
+		"name" : "Pass Key",
+		"description" : "opens a door somewhere",
+		"max_stacks" : 1,
+		"sprite" : "res://TestAssets/Items/passkey.png"
+	},
+	"chip" : {
+		"name" : "Chip",
+		"description" : "not the potato kind, but still tasty",
+		"max_stacks" : 8,
+		"sprite" : "res://TestAssets/Items/chip.png"
+	},
+	"battery" : {
+		"name" : "Battery",
+		"description" : "powers your tools",
+		"max_stacks" : 2,
+		"sprite" : "res://TestAssets/Items/battery.png"
+	}
+}
