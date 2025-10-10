@@ -1,7 +1,7 @@
 extends Node3D
 
 const ROOM = preload("res://Environment/Rooms/room.tscn")
-const SHAFT = preload("res://Environment/Rooms/elevator_shaft.tscn")
+const SHAFT = preload("res://Environment/Rooms/elevator.tscn")
 
 var first_rooms := [] # array of doubly linked lists
 
@@ -61,6 +61,3 @@ func create_elevator(floors:int) -> void:
 	shaft.room_height = int(Room.DEFAULT_HEIGHT) * floors
 	add_child(shaft)
 	shaft.global_position.x = first_rooms[0].get_left_pos() - shaft.room_size.x
-	
-	#var car : Room = ROOM.instantiate()
-	
