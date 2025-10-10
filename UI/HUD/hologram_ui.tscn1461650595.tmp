@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://c1it047l2b5k"]
+
+[ext_resource type="Script" uid="uid://bhnpjmqgemr1f" path="res://UI/HUD/hologram_ui.gd" id="1_b7b8r"]
+[ext_resource type="PackedScene" uid="uid://dg3oc6c73a7fs" path="res://UI/HUD/hud.tscn" id="2_j3udm"]
+[ext_resource type="Shader" uid="uid://dytnlmlwgatsa" path="res://UI/HUD/ui_viewport3d.gdshader" id="3_avflf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o8dmv"]
+size = Vector3(2.81, 1.761, 0.01)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_o8dmv"]
+viewport_path = NodePath("HologramUI/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xiefr"]
+resource_local_to_scene = true
+render_priority = 2
+shader = ExtResource("3_avflf")
+shader_parameter/ui_tex = SubResource("ViewportTexture_o8dmv")
+shader_parameter/glow_tint = Color(1, 1, 1, 1)
+shader_parameter/glow_strength = 1.200000057
+shader_parameter/scanline_strength = 0.3
+shader_parameter/scanline_speed = -0.0069995253324997
+shader_parameter/flicker_speed = 0.50000002375
+shader_parameter/flicker_intensity = 0.050000002375
+shader_parameter/border_fade_size = 0.0970000046075
+
+[sub_resource type="QuadMesh" id="QuadMesh_m3pee"]
+size = Vector2(3.6, 2.4)
+
+[node name="HologramUI" type="Area3D"]
+script = ExtResource("1_b7b8r")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_o8dmv")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(1080, 900)
+render_target_update_mode = 4
+
+[node name="HUD" parent="SubViewport" instance=ExtResource("2_j3udm")]
+unique_name_in_owner = true
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="HUDMesh" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_xiefr")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_m3pee")
+skeleton = NodePath("../..")
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]

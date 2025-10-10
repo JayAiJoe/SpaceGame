@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dg3oc6c73a7fs"]
+[gd_scene load_steps=6 format=3 uid="uid://dg3oc6c73a7fs"]
 
 [ext_resource type="Theme" uid="uid://bgoyo6fkov80a" path="res://UI/main_theme.tres" id="1_ing8j"]
 [ext_resource type="Shader" uid="uid://cqqhtxmffqc1h" path="res://UI/HUD/ui_glow.gdshader" id="1_te8l2"]
 [ext_resource type="Script" uid="uid://mni5cb5m7oom" path="res://UI/HUD/hud.gd" id="3_qdh7y"]
+[ext_resource type="Script" uid="uid://cvbv5lryc2dvn" path="res://UI/HUD/item_panel.gd" id="4_qdh7y"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qdh7y"]
 shader = ExtResource("1_te8l2")
@@ -58,6 +59,7 @@ theme_override_constants/separation = 12
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_ing8j")
+script = ExtResource("4_qdh7y")
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/InventoryItems/Panel"]
 layout_mode = 1
@@ -159,3 +161,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
 color = Color(1, 0, 0, 1)
+
+[connection signal="mouse_entered" from="MarginContainer/VBoxContainer/InventoryItems/Panel" to="MarginContainer/VBoxContainer/InventoryItems/Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="MarginContainer/VBoxContainer/InventoryItems/Panel" to="MarginContainer/VBoxContainer/InventoryItems/Panel" method="_on_mouse_exited"]
