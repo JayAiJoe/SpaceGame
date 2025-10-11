@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://d3lk6t3vgetor"]
+[gd_scene load_steps=8 format=3 uid="uid://d3lk6t3vgetor"]
 
 [ext_resource type="PackedScene" uid="uid://dfo85ipfpupg2" path="res://Environment/Rooms/room.tscn" id="1_kfdam"]
 [ext_resource type="Script" uid="uid://c6istrimstjij" path="res://Environment/Rooms/elevator.gd" id="2_4ag6c"]
@@ -18,6 +18,14 @@ resource_local_to_scene = true
 normal_enabled = true
 heightmap_enabled = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kfdam"]
+resource_local_to_scene = true
+normal_enabled = true
+heightmap_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4ag6c"]
+resource_local_to_scene = true
+
 [node name="Elevator" instance=ExtResource("1_kfdam")]
 script = ExtResource("2_4ag6c")
 
@@ -30,4 +38,10 @@ material = SubResource("StandardMaterial3D_deoso")
 [node name="Back" parent="Walls" index="2"]
 material = SubResource("StandardMaterial3D_f2ndd")
 
+[node name="Front" parent="Walls" index="3"]
+material = SubResource("StandardMaterial3D_kfdam")
+
 [node name="ElevatorCar" parent="." index="2" instance=ExtResource("1_kfdam")]
+
+[node name="CollisionShape3D" parent="RoomArea" index="0"]
+shape = SubResource("BoxShape3D_4ag6c")

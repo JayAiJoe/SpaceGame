@@ -20,6 +20,8 @@ func set_room_size(length:float, height:=DEFAULT_HEIGHT) -> void:
 		doorways[floor_number] = new_doorway
 		$Walls/Right.add_child(new_doorway)
 		new_doorway.global_position.y = right_doorway.size.y/2 + floor_number * DEFAULT_HEIGHT
+	
+	
 
 func _input(event: InputEvent) -> void:
 	for i in range(1, 6):

@@ -114,15 +114,14 @@ func randomize_wall_textures() -> void:
 func _on_player_entered_room(player, room) -> void:
 	if room == self:
 		GameCamera.teleport_to($RoomCameraAnchor/CameraMarker.global_transform)
-		$Walls/Front.visible = false
-	else:
-		$Walls/Front.visible = true
+		#$Walls/Front.visible = false
+	#else:
+		#$Walls/Front.visible = true
 	
 
 func _on_room_area_area_entered(area):
 	if area.owner.is_in_group("Players"):
 		Events.player_entered_room.emit(area.owner, self)
-		#set_as_player_current_room()
 
 func adjust_camera_to_room2(rlength: float):
 	var fov_rad := deg_to_rad(camera.fov) # usually 75 degrees

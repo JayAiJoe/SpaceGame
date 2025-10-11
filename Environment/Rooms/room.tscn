@@ -68,13 +68,7 @@ material = SubResource("StandardMaterial3D_w06pt")
 
 [node name="Front" type="CSGBox3D" parent="Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.5, 4.9)
-use_collision = true
-size = Vector3(5, 5, 0.1)
-material = SubResource("StandardMaterial3D_w06pt")
-
-[node name="FrontTemp" type="CSGBox3D" parent="Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.5, 4.9)
-transparency = 1.0
+visible = false
 use_collision = true
 size = Vector3(5, 5, 0.1)
 material = SubResource("StandardMaterial3D_j5hem")

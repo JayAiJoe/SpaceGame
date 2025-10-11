@@ -62,3 +62,4 @@ func create_elevator(floors:int) -> void:
 	shaft.room_height = int(Room.DEFAULT_HEIGHT) * floors
 	add_child(shaft)
 	shaft.global_position.x = first_rooms[0].get_left_pos() - shaft.room_size.x
+	shaft.set_room_info(shaft.room_size.x)

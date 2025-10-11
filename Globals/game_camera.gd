@@ -4,6 +4,7 @@ func _ready():
 	current = true
 
 func teleport_to(target: Transform3D) -> void:
+	print("teleported to: " + str(target.origin))
 	global_transform = target
 
 func transition_to(target: Transform3D, duration: float = 1.0, tween_ease : Tween.EaseType = Tween.EASE_OUT, trans : Tween.TransitionType = Tween.TRANS_LINEAR) -> void:
