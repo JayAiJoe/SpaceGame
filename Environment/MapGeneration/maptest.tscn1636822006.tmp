@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bp70gn0llhnt1"]
+
+[ext_resource type="Script" uid="uid://bfte22rygv3bs" path="res://Environment/MapGeneration/MapVisualizer.gd" id="1_blt0r"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Maptest" type="Node3D" parent="."]
+script = ExtResource("1_blt0r")
