@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxjgowkstmki"]
+
+[ext_resource type="Script" uid="uid://dgpente1lhcw5" path="res://Environment/Interactables/ladder.gd" id="1_gmigl"]
+[ext_resource type="Texture2D" uid="uid://bvu26y20gcxhj" path="res://TestAssets/Textures/wall3_albedo.png" id="1_lamow"]
+[ext_resource type="ArrayMesh" uid="uid://bc6qdcdmf6jb3" path="res://TestAssets/Models/ladder-color.obj" id="1_oj08u"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gmigl"]
+albedo_texture = ExtResource("1_lamow")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lamow"]
+size = Vector3(0.8, 5, 0.5)
+
+[node name="Ladder" type="Node3D"]
+script = ExtResource("1_gmigl")
+
+[node name="LadderColor" type="MeshInstance3D" parent="."]
+transform = Transform3D(-6.556708e-08, 0, 1.5, 0, 1, 0, -1.5, 0, -6.556708e-08, 0, 0, 0.2)
+material_override = SubResource("StandardMaterial3D_gmigl")
+mesh = ExtResource("1_oj08u")
+
+[node name="LadderColor2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-6.556708e-08, 0, 1.5, 0, 1, 0, -1.5, 0, -6.556708e-08, 0, 1, 0.2)
+material_override = SubResource("StandardMaterial3D_gmigl")
+mesh = ExtResource("1_oj08u")
+
+[node name="LadderColor3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-6.556708e-08, 0, 1.5, 0, 1, 0, -1.5, 0, -6.556708e-08, 0, 2, 0.2)
+material_override = SubResource("StandardMaterial3D_gmigl")
+mesh = ExtResource("1_oj08u")
+
+[node name="LadderColor4" type="MeshInstance3D" parent="."]
+transform = Transform3D(-6.556708e-08, 0, 1.5, 0, 1, 0, -1.5, 0, -6.556708e-08, 0, 3, 0.2)
+material_override = SubResource("StandardMaterial3D_gmigl")
+mesh = ExtResource("1_oj08u")
+
+[node name="LadderColor5" type="MeshInstance3D" parent="."]
+transform = Transform3D(-6.556708e-08, 0, 1.5, 0, 1, 0, -1.5, 0, -6.556708e-08, 0, 4, 0.2)
+material_override = SubResource("StandardMaterial3D_gmigl")
+mesh = ExtResource("1_oj08u")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0.5)
+shape = SubResource("BoxShape3D_lamow")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

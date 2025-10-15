@@ -3,8 +3,9 @@ class_name Room
 
 const WALL_THICKNESS := 0.1
 const DOOR_SIZE := Vector2(2, 3)
-const DEFAULT_WIDTH := 7.0
+const DEFAULT_WIDTH := 10.0
 const DEFAULT_HEIGHT := 5.0
+const DEFAULT_DEPTH := 10.0
 const ROOM_SIZE_GRANULARITY : int = 5
 
 var room_size := Vector3.ONE
@@ -20,26 +21,27 @@ var right_room : Room
 
 func _ready() -> void:
 	randomize()
-	set_room_size(room_length, room_height)
 	randomize_wall_textures()
-	set_room_info(room_length)
+	set_room_info({})
 	Events.player_entered_room.connect(_on_player_entered_room)
 	
 	
-func set_room_info(length : int) -> void:
-	room_length = length
-	set_room_size(length)
-	adjust_camera_to_room(length)
-	
-	$Items/Button.position = Vector3(room_size.x/2.0, 0, -room_size.z/2.0 + 0.5)
-	$Items/Item1.position = Vector3(room_size.x/2.0 + 2, 0, 0)
-	$Items/Item2.position = Vector3(room_size.x/2.0, 0, 0)
-	$Items/Item3.position = Vector3(room_size.x/2.0 - 2, 0, 0)
+func set_room_info(room_data : Dictionary) -> void:
+	set_room_size(DEFAULT_WIDTH)
+	adjust_camera_to_room(DEFAULT_WIDTH)
+	if room_data.has("left") and room_data.left != null:
+		$Walls/Left/Doorway.operation = CSGShape3D.OPERATION_SUBTRACTION
+	if room_data.has("right") and room_data.right != null:
+		$Walls/Right/Doorway.operation =  CSGShape3D.OPERATION_SUBTRACTION
+	if room_data.has("up") and room_data.up != null:
+		$Walls/Ceiling/Doorway.operation = CSGShape3D.OPERATION_SUBTRACTION
+	if room_data.has("down") and room_data.down != null:
+		$Walls/Floor/Doorway.operation = CSGShape3D.OPERATION_SUBTRACTION
 	
 
 
-func set_room_size(length:float, height:=DEFAULT_HEIGHT) -> void:
-	room_size = Vector3(length, height, DEFAULT_WIDTH)
+func set_room_size(width:float) -> void:
+	room_size = Vector3(width, DEFAULT_HEIGHT, DEFAULT_DEPTH)
 	
 	$Walls/Floor.size = Vector3(room_size.x, WALL_THICKNESS, room_size.z)
 	$Walls/Floor.position = Vector3(room_size.x/2, -WALL_THICKNESS/2, 0)
@@ -80,16 +82,18 @@ func set_room_size(length:float, height:=DEFAULT_HEIGHT) -> void:
 		)
 	
 	# Add this:
-	var inner_length = length - WALL_THICKNESS * 2
-	var inner_width = DEFAULT_WIDTH - WALL_THICKNESS * 2
+	var inner_width = width - WALL_THICKNESS * 2
+	var inner_depth = DEFAULT_DEPTH - WALL_THICKNESS * 2
 	var inner_height = DEFAULT_HEIGHT - WALL_THICKNESS
 
 	var area = $RoomArea
 	var shape = area.get_node("CollisionShape3D").shape as BoxShape3D
-	shape.size = Vector3(inner_length, inner_height, inner_width)
+	shape.size = Vector3(inner_width, inner_height, inner_depth)
 	
 	# Offset the Area3D so its center matches the inner volume, not outer volume
-	area.position = Vector3(length / 2, inner_height / 2, 0)
+	area.position = Vector3(width / 2, inner_height / 2, 0)
+	
+	$Things/Ladder.position = Vector3(room_size.x/2, 0, -room_size.z/2 + 0.5)
 
 func get_left_pos() -> float:
 	return global_position.x

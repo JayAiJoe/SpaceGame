@@ -1,65 +1,52 @@
 extends Node3D
+class_name MapLoader3D
 
-const ROOM = preload("res://Environment/Rooms/room.tscn")
-const SHAFT = preload("res://Environment/Rooms/elevator.tscn")
+const ROOM_SCENE := preload("res://Environment/Rooms/room.tscn")
 
-var first_rooms := [] # array of doubly linked lists
+# Room spacing matches default Room dimensions
+const ROOM_DEPTH := 5.0  # unused now but could be useful for Z offsets
 
-const FLOORS_NUM := 5
+@onready var generator := MapGraphGenerator.new()
+
+var instantiated_rooms := {} # room.id -> Room instance
 
 func _ready() -> void:
-	create_floors(FLOORS_NUM)
-	create_elevator(FLOORS_NUM)
+	load_map()
 
-func create_floors(floors:int) -> void:
-	var max_width := 40.
-	var downstairs_room : Room = null
-	for i in range(floors):
-		var new_floor_start = create_floor(max_width)
-		first_rooms.append(new_floor_start)
-		if downstairs_room:
-			var room = new_floor_start
-			var new_floor_height = downstairs_room.get_ceiling_pos()
-			while room:
-				room.global_position.y = new_floor_height
-				room = room.right_room
-				
-		downstairs_room = first_rooms[i]
+func load_map() -> void:
+	instantiated_rooms.clear()
+	var graph = generator.generate()
 
-func create_floor(total_length:float, rooms:int=3) -> Room:
-	var first_room : Room
-	var left_room : Room = null
-	var current_length := 0.0
-	for i in range(rooms):
-		var room_length : float
-		if i < rooms-1:
-			room_length = (total_length - current_length)/(rooms - i) * randf_range(0.65, 1.35)
-			room_length = snapped(room_length, Room.ROOM_SIZE_GRANULARITY)
-			current_length += room_length
-		else:
-			room_length = total_length - current_length
-			
-		var new_room = ROOM.instantiate()
-		add_child(new_room)
-		new_room.set_room_info(room_length)
-		
-		
-		if left_room:
-			left_room.right_room = new_room
-			new_room.left_room = left_room
-			
-			new_room.global_position.x = left_room.get_right_pos()
-			
-		else: # first_room
-			first_room = new_room
-			
-		left_room = new_room
+	if graph.size() == 0:
+		return
+	var visited := {}
+	var start_room = graph.values()[0]
+	_place_room_recursive(start_room, Vector3.ZERO, visited)
+
+func _place_room_recursive(room_data: Dictionary, world_pos: Vector3, visited: Dictionary) -> void:
+	if visited.has(room_data.id):
+		return
+	visited[room_data.id] = true
+
+	# --- instantiate room scene ---
+	var room_instance: Room = ROOM_SCENE.instantiate()
+	add_child(room_instance)
+	room_instance.global_position = world_pos
+	room_instance.set_room_info(room_data) # set length to match default width
+	instantiated_rooms[room_data.id] = room_instance
 	
-	return first_room
 
-func create_elevator(floors:int) -> void:
-	var shaft : Room = SHAFT.instantiate()
-	shaft.room_height = int(Room.DEFAULT_HEIGHT) * floors
-	add_child(shaft)
-	shaft.global_position.x = first_rooms[0].get_left_pos() - shaft.room_size.x
-	shaft.set_room_info(shaft.room_size.x)
+
+	# --- place neighbors recursively ---
+	var neighbor_dirs = {
+		"left": Vector3(-Room.DEFAULT_WIDTH, 0, 0),
+		"right": Vector3(Room.DEFAULT_WIDTH, 0, 0),
+		"up": Vector3(0, Room.DEFAULT_HEIGHT, 0),
+		"down": Vector3(0, -Room.DEFAULT_HEIGHT, 0)
+	}
+
+	for dir_name in ["left", "right", "up", "down"]:
+		var neighbor = room_data.get(dir_name, null)
+		if neighbor != null and not visited.has(neighbor.id):
+			var neighbor_pos = world_pos + neighbor_dirs[dir_name]
+			_place_room_recursive(neighbor, neighbor_pos, visited)

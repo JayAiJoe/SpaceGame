@@ -3,11 +3,14 @@ extends Node3D
 @onready var hud = $HologramUI
 @onready var player = $Player
 
+@onready var map_gen = MapGraphGenerator.new()
+
 func _ready():
 	hud.hide()
 	Events.player_viewed_hud.connect(_on_player_view_hud)
 	Events.player_exited_hud.connect(_on_player_exit_hud)
 	$HologramUI.set_player(player)
+	
 
 
 func _input(event):

@@ -4,9 +4,9 @@ class_name MapGraphGenerator
 # -------------------
 # Tunable parameters
 # -------------------
-@export var grid_width := 8
-@export var grid_height := 8
-@export var total_rooms := 15
+@export var grid_width := 5
+@export var grid_height := 5
+@export var total_rooms := 12
 @export var vertical_weight := 0.3    # Base chance for vertical growth
 @export var vertical_bonus := 0.5      # Bonus if parent cell already has vertical connection
 
